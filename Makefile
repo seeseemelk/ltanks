@@ -5,7 +5,7 @@ TARGET ?= linux
 #TARGET ?= dos
 
 BINDIR := bin/$(TARGET)
-CFLAGS := -Wall -Wextra -Iincludes -DLTANKS_TARGET=$(TARGET) -DLUA_32BITS
+CFLAGS := -Wall -Wextra -Iincludes -Iincludes/lua -DLTANKS_TARGET=$(TARGET) -DLUA_32BITS
 LDFLAGS :=
 
 ifeq ($(TARGET), linux)
