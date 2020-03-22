@@ -5,17 +5,21 @@ TARGET ?= linux
 #TARGET ?= dos
 
 BINDIR := bin/$(TARGET)
-CFLAGS := -Wall -Wextra -Iincludes -Iincludes/lua -DLTANKS_TARGET=$(TARGET) -DLUA_32BITS
-LDFLAGS :=
 
 ifeq ($(TARGET), linux)
 EXECUTABLE:=ltanks.linux
 DEPS := ncurses
-CFLAGS += $(shell pkg-config --cflags $(DEPS)) -MMD -MF $(@:%.o=%.d)
-LDFLAGS += $(shell pkg-config --libs $(DEPS))
+CFLAGS := -Wall -Wextra \
+	-Iincludes -Iincludes/lua \
+	-DLTANKS_TARGET=$(TARGET) -DLUA_32BITS -MMD -MF $(@:%.o=%.d) \
+	$(shell pkg-config --cflags $(DEPS)) \
+	-c
+LDFLAGS += -lm $(shell pkg-config --libs $(DEPS))
+
 else ifeq ($(TARGET), dos)
-EXECUTABLE:=ltanks.com
-CC:=ia16-elf-gcc
+EXECUTABLE := ltanks.exe
+CC := wcc
+CFLAGS := -os -0 -bc -fpi -Iincludes -Iincludes/lua
 endif
 
 include src/Makefile
@@ -26,11 +30,11 @@ OBJ=$(SRC:src/%.c=$(BINDIR)/%.o)
 all: $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJ)
-	$(CC) $< -o $@
+	$(CC) $^ $(LDFLAGS) -o $@
 
 $(BINDIR)/%.o: src/%.c
 	@mkdir -p $(basename $@)
-	$(CC) $(CFLAGS) -MMD -MF $(@:%.o=%.d) -c $< -o $@ -Iincludes
+	$(CC) $(CFLAGS) $< -fo=$@
 
 .PHONY: clean
 clean:
