@@ -19,7 +19,8 @@ LDFLAGS += -lm $(shell pkg-config --libs $(DEPS))
 else ifeq ($(TARGET), dos)
 EXECUTABLE := ltanks.exe
 CC := wcc
-CFLAGS := -os -0 -bc -fpi -Iincludes -Iincludes/lua
+CFLAGS := -os -0 -bc -fpi -Iincludes -Iincludes/lua -mm
+LDFLAGS += -os -lr -mm
 endif
 
 include src/Makefile
@@ -30,7 +31,8 @@ OBJ=$(SRC:src/%.c=$(BINDIR)/%.o)
 all: $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJ)
-	$(CC) $^ $(LDFLAGS) -o $@
+	wcl $^ $(LDFLAGS) -fe=$@
+#	$(CC) $^ $(LDFLAGS) -o $@
 
 $(BINDIR)/%.o: src/%.c
 	@mkdir -p $(basename $@)

@@ -4,3 +4,5 @@
 /.settings
 /ltanks.*
 /lua-5.4.0-beta
+/*.err
+/bak
