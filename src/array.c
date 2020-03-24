@@ -9,6 +9,9 @@ struct entry_t
 	void* entry;
 };
 
+/**
+ * A generic container implemented as a dynamically growing array.
+ */
 struct array_t
 {
 	/// A pointer to the start of the array.
@@ -22,7 +25,11 @@ struct array_t
 };
 
 /**
- * @brief Grows the array.
+ * Grows the array.
+ *
+ * Grows the array so that new items can be added to it.
+ *
+ * @param array The array to grow.
  */
 static void array_grow(Array array)
 {
@@ -33,6 +40,11 @@ static void array_grow(Array array)
 	array->memory = realloc(array->memory, array->capacity * sizeof(struct entry_t));
 }
 
+/**
+ * Creates a new array.
+ *
+ * @return The newly created array.
+ */
 Array array_new(void)
 {
 	Array array = malloc(sizeof(struct array_t));
@@ -42,11 +54,26 @@ Array array_new(void)
 	return array;
 }
 
+/**
+ * Frees an array.
+ *
+ * @param array The array to free.
+ */
 void array_free(Array array)
 {
+	free(array->memory);
 	free(array);
 }
 
+/**
+ * Gets the size of the array.
+ *
+ * Counts the number of items that are currently stored
+ * inside of the array.
+ *
+ * @param array The array to check.
+ * @return The number of items inside of the array.
+ */
 size_t array_size(Array array)
 {
 	return array->size;

@@ -1,3 +1,11 @@
+/**
+ * The World class.
+ *
+ * This class manages the game field or the world.
+ * It only concerns itself with stuff directly on the game field,
+ * such as tanks and bullets.
+ */
+
 #include "game/world.h"
 #include "game/tank.h"
 #include "array.h"
@@ -24,6 +32,11 @@ static void* _world_next_tank(void* arg)
 	return array_get(iterator->tanks, iterator->index++);
 }
 
+/**
+ * Creates a new world.
+ *
+ * @return The newly created world.
+ */
 World world_new(void)
 {
 	World world = malloc(sizeof(struct world_t));
@@ -31,11 +44,20 @@ World world_new(void)
 	return world;
 }
 
+/**
+ * Frees a world.
+ */
 void world_free(World world)
 {
+	array_free(world->tanks);
 	free(world);
 }
 
+/**
+ * Gets all tanks on this world.
+ *
+ * @return A range describing all tanks on this world.
+ */
 range_t world_get_tanks(World world)
 {
 	TankIterator iterator = malloc(sizeof(TankIterator));
@@ -45,6 +67,12 @@ range_t world_get_tanks(World world)
 	return range;
 }
 
+/**
+ * Adds a tank to the world.
+ *
+ * @param world The world to add it to.
+ * @param tank The tank to add.
+ */
 void world_add_tank(World world, Tank tank)
 {
 	array_push(world->tanks, tank);

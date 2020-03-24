@@ -25,5 +25,6 @@ int main(int argc, char** argv)
 	}
 
 	lua_close(lua);
+	game_quit();
 	return 0;
 }

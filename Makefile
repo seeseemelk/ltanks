@@ -46,6 +46,10 @@ info:
 	@echo Binary Directory: $(BINDIR)
 	@echo Deps: $(SRC:src/%.c=$(BINDIR)/%.d)
 
+.PHONY: docs
+docs:
+	doxygen
+
 $(EXECUTABLE): $(OBJ)
 	$(LD) $(LDFLAGS)
 
