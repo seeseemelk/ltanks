@@ -1,0 +1,1 @@
+SRC += $(wildcard src/game/*.c)
