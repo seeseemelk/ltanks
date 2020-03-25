@@ -11,6 +11,12 @@ pipeline {
         }
 
         stage('Build DOS') {
+          agent {
+            docker {
+              image 'lapinlabs/watcom'
+            }
+
+          }
           steps {
             sh 'TARGET=dos make all'
             archiveArtifacts(onlyIfSuccessful: true, artifacts: 'ltanks.exe')
