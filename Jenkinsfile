@@ -13,7 +13,7 @@ pipeline {
         stage('Build DOS') {
           agent {
             docker {
-              image 'lapinlabs/watcom'
+              image 'seeseemelk/ltanks-build:dos-latest'
             }
 
           }
