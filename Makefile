@@ -8,7 +8,7 @@ BINDIR := bin/$(TARGET)
 
 ifeq ($(TARGET), linux)
 EXECUTABLE:=ltanks.linux
-DEPS := ncurses
+DEPS := sdl2
 CC := cc
 LD := cc
 CFLAGS = -Wall -Wextra \
@@ -23,13 +23,15 @@ LDFLAGS = -lm $(shell pkg-config --libs $(DEPS)) \
 
 else ifeq ($(TARGET), dos)
 EXECUTABLE := ltanks.exe
-CC := wcc
-LD := wcl
-CFLAGS = -os -0 -bc -fpi -Iincludes -Iincludes/lua \
+CC := wcl
+#LD := wcl
+CFLAGS = -c -os -0 -om -bc -Iincludes -Iincludes/lua \
 	-ad=$(@:%.o=%.d) -adt=$@ -add=$< \
 	-fr=$(@:%.o=%.err) \
-	-mm $< -fo=$@ -za99
-LDFLAGS = -os -lr -mm -fe=$@ $^
+	-mm $< -fo=$@ -za99 -fpi87
+LD := wcl
+#LDFLAGS := file 
+LDFLAGS = -os -0 -om -lr -mm -fe=$@ $^
 endif
 
 include src/Makefile
