@@ -32,9 +32,8 @@ static void _event_loop(void)
 			if (e.type == SDL_QUIT)
 				gfx_quit();
 			else if (e.type == SDL_KEYDOWN)
-			{
 				_handle_key(&e);
-			}
+			game_step();
 			SDL_UpdateWindowSurface(g_window);
 		}
 	}

@@ -57,6 +57,15 @@ void tank_set_location(Tank tank, u16 x, u16 y)
  */
 void tank_set_motor(Tank tank, float direction, float speed)
 {
+	if (speed < 0)
+	{
+		speed = -speed;
+		direction += M_PI/2;
+	}
+
+	//if (speed > 1000)
+		//speed = 1000;
+
 	tank->drive_direction = direction;
 	tank->drive_speed = speed;
 }

@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <graph.h>
 #include <conio.h>
+#include <dos.h>
 
 static bool g_run;
 
@@ -12,7 +13,7 @@ static void _handle_special(char key)
 	switch (key)
 	{
 	default:
-		gfx_print(0, 0, "???");
+		//gfx_print(0, 0, "???");
 		break;
 	}
 }
@@ -40,13 +41,25 @@ void gfx_run(void)
 
 	g_run = true;
 	game_loaded();
+
+	int page_to_use = 0;
+
 	while (g_run)
 	{
-		int c = _getch();
-		if (c == 0)
-			_handle_special(_getch());
-		else
-			_handle_normal(c);
+		_setactivepage(page_to_use);
+		if (_kbhit() != 0)
+		{
+			int c = _getch();
+			if (c == 0)
+				_handle_special(_getch());
+			else
+				_handle_normal(c);
+		}
+		game_step();
+
+		_setvisualpage(page_to_use);
+		delay(1);
+		page_to_use = 1 - page_to_use;
 	}
 }
 
@@ -63,6 +76,11 @@ void gfx_set_char(unsigned int x, unsigned int y, char c)
 
 	_settextposition(y + 1, x + 1);
 	_outtext(str);
+}
+
+void gfx_clear(void)
+{
+	_clearscreen(_GCLEARSCREEN);
 }
 
 unsigned int gfx_width(void)

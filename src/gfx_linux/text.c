@@ -49,3 +49,11 @@ void gfx_set_char(unsigned int x, unsigned int y, char c)
 
 	SDL_BlitSurface(g_font, &source, g_surface, &destination);
 }
+
+/**
+ * Clear the screen.
+ */
+void gfx_clear(void)
+{
+	SDL_FillRect(g_surface, NULL, SDL_MapRGB(g_surface->format, 0, 0, 0));
+}

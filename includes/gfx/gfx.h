@@ -10,6 +10,8 @@ enum keycode_t
 };
 typedef enum keycode_t keycode_t;
 
+#define GFX_VERTICAL 0x7F
+
 typedef struct
 {
 	keycode_t key;
@@ -18,8 +20,11 @@ typedef struct
 
 void gfx_run(void);
 void gfx_quit(void);
+
+void gfx_clear(void);
 void gfx_set_char(unsigned int x, unsigned int y, char c);
 void gfx_print(unsigned int x, unsigned int y, const char* str);
+
 unsigned int gfx_width(void);
 unsigned int gfx_height(void);
 

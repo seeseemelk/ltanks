@@ -10,17 +10,17 @@ static int _api_move(lua_State* L)
 {
 	// Get arguments
 	lua_Number direction = luaL_checknumber(L, 1);
-	lua_Number speed = luaL_checknumber(L, 1);
+	lua_Number speed = luaL_checknumber(L, 2);
 
 	// Convert to degrees
-	direction *= 180.0 / M_PI;
+	float radians = direction * 180.0 / M_PI;
 
 	// Get VM
 	VM vm = lua_touserdata(L, lua_upvalueindex(1));
 	Tank tank = vm_get_tank(vm);
 
 	// Set tank parameters
-	tank_set_motor(tank, (float) direction, (float) speed);
+	tank_set_motor(tank, (float) radians, (float) speed);
 
 	// No return arguments
 	return 0;

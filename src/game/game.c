@@ -35,8 +35,8 @@ void game_init(void)
 	vm_set_program(g_game.vm,
 			"local d = 0\n"
 			"function loop()\n"
-			"  move(d, 10)\n"
-			"  d = d + 10\n"
+			"  move(d, 1000)\n"
+			"  d = d + 0.005\n"
 			"end");
 
 	world_add_tank(g_game.world, tank);
@@ -49,24 +49,6 @@ void game_quit(void)
 {
 	vm_free(g_game.vm);
 	world_free(g_game.world);
-}
-
-/**
- * Runs a single step of the game.
- */
-void game_step(void)
-{
-	// Run VM state
-	vm_run(g_game.vm);
-
-	// Move all tanks
-	range_t iterator = world_get_tanks(g_game.world);
-	Tank tank;
-	while ((tank = range_next(&iterator)) != NULL)
-		tank_move(tank, 1.0f);
-
-	// Print state
-	game_print_state();
 }
 
 /**
