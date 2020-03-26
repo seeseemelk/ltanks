@@ -24,13 +24,11 @@ LDFLAGS = -lm $(shell pkg-config --libs $(DEPS)) \
 else ifeq ($(TARGET), dos)
 EXECUTABLE := ltanks.exe
 CC := wcl
-#LD := wcl
+LD := wcl
 CFLAGS = -c -os -0 -om -bc -Iincludes -Iincludes/lua \
 	-ad=$(@:%.o=%.d) -adt=$@ -add=$< \
 	-fr=$(@:%.o=%.err) \
 	-mm $< -fo=$@ -za99 -fpi87
-LD := wcl
-#LDFLAGS := file 
 LDFLAGS = -os -0 -om -lr -mm -fe=$@ $^
 endif
 
@@ -63,4 +61,6 @@ $(BINDIR)/%.o: src/%.c
 clean:
 	rm -rf $(BINDIR) $(EXECUTABLE)
 
+%.h:
+	
 -include $(SRC:src/%.c=$(BINDIR)/%.d)

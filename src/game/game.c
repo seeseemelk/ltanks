@@ -1,19 +1,14 @@
 #include "game/game.h"
 #include "game/world.h"
 #include "game/tank.h"
+#include "game/internal.h"
 #include "vm/vm.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
 
-struct game_t
-{
-	World world;
-	VM vm;
-};
-
-static struct game_t g_game;
+struct game_t g_game;
 
 /**
  * Initialises the random number generator.
@@ -45,12 +40,6 @@ void game_init(void)
 			"end");
 
 	world_add_tank(g_game.world, tank);
-
-	/*for (;;)
-	{
-		sleep(1);
-		game_step();
-	}*/
 }
 
 /**
