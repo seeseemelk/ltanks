@@ -22,13 +22,15 @@ LDFLAGS = -lm $(shell pkg-config --libs $(DEPS)) \
 	 -o $@ $^
 
 else ifeq ($(TARGET), dos)
+export INCLUDE=$(WATCOM)/h
 EXECUTABLE := ltanks.exe
 CC := wcl
 LD := wcl
-CFLAGS = -c -os -0 -om -bc -Iincludes -Iincludes/lua \
+CFLAGS = -c -os -0 -bc -Iincludes -Iincludes/lua \
 	-ad=$(@:%.o=%.d) -adt=$@ -add=$< \
 	-fr=$(@:%.o=%.err) \
-	-mm $< -fo=$@ -za99 -fpi87
+	-mm $< -fo=$@ -za99 -fpi87 \
+	-bcl=dos
 LDFLAGS = -os -0 -om -lr -mm -fe=$@ $^
 endif
 

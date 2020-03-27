@@ -35,7 +35,7 @@ static void _handle_normal(char key)
 
 void gfx_run(void)
 {
-	_setvideomode(_TEXTBW80);
+	_setvideomode(_TEXTMONO);
 	_clearscreen(_GCLEARSCREEN);
 	_displaycursor(false);
 
@@ -68,9 +68,9 @@ void gfx_quit(void)
 	g_run = false;
 }
 
-void gfx_set_char(unsigned int x, unsigned int y, char c)
+void gfx_set_char(unsigned int x, unsigned int y, unsigned char c)
 {
-	char str[2];
+	unsigned char str[2];
 	str[0] = c;
 	str[1] = 0;
 

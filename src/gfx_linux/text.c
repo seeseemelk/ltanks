@@ -29,7 +29,7 @@ void gfx_init_text(void)
 /**
  * Sets the character at a location on screen.
  */
-void gfx_set_char(unsigned int x, unsigned int y, char c)
+void gfx_set_char(unsigned int x, unsigned int y, unsigned char c)
 {
 	SDL_Rect source =
 	{
