@@ -55,11 +55,12 @@ void gfx_run(void)
 			else
 				_handle_normal(c);
 		}
-		game_step();
 
-		_setvisualpage(page_to_use);
-		delay(1);
-		page_to_use = 1 - page_to_use;
+		if (game_step())
+		{
+			_setvisualpage(page_to_use);
+			page_to_use = 1 - page_to_use;
+		}
 	}
 }
 

@@ -26,16 +26,17 @@ static void _event_loop(void)
 	while (g_run)
 	{
 		SDL_Event e;
-		while (SDL_PollEvent(&e) != 0)
+		int has_event = SDL_WaitEventTimeout(&e, 2);
+		// Quit the program with either exit-button or ESCAPE.
+		if (has_event != 0)
 		{
-			// Quit the program with either exit-button or ESCAPE.
 			if (e.type == SDL_QUIT)
 				gfx_quit();
 			else if (e.type == SDL_KEYDOWN)
 				_handle_key(&e);
-			game_step();
-			SDL_UpdateWindowSurface(g_window);
 		}
+		game_step();
+		SDL_UpdateWindowSurface(g_window);
 	}
 }
 
