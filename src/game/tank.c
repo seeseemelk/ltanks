@@ -5,6 +5,7 @@
 #include "game/tank.h"
 #include "game/world.h"
 #include "game/missile.h"
+#include "vm/vm.h"
 #include "cdefs.h"
 #include <stdlib.h>
 #include <math.h>
@@ -19,6 +20,7 @@ struct tank_t
 	u16 y;
 	unsigned int id;
 	unsigned short fire_cooldown;
+	VM vm;
 };
 
 /**
@@ -37,6 +39,7 @@ Tank tank_new(unsigned int id)
 	tank->radar_direction = 0;
 	tank->drive_speed = 0;
 	tank->fire_cooldown = 0;
+	tank->vm = NULL;
 	return tank;
 }
 
@@ -48,6 +51,22 @@ Tank tank_new(unsigned int id)
 void tank_free(Tank tank)
 {
 	free(tank);
+}
+/**
+ * Sets the VM attached to the tank.
+ */
+void tank_set_vm(Tank tank, VM vm)
+{
+	tank->vm = vm;
+	vm_set_tank(vm, tank);
+}
+
+/**
+ * Gets the VM used by the tank.
+ */
+VM tank_get_vm(Tank tank)
+{
+	return tank->vm;
 }
 
 /**

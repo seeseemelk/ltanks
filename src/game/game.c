@@ -29,8 +29,7 @@ static void load_bot(const char* path)
 	tank_set_location(tank, rand(), rand());
 
 	VM vm = vm_new_from_file(path);
-	vm_set_tank(vm, tank);
-	array_push(g_game.vm, vm);
+	tank_set_vm(tank, vm);
 
 	world_add_tank(g_game.world, tank);
 }
@@ -43,12 +42,13 @@ void game_init(void)
 	init_rng();
 
 	g_game.world = world_new();
-	g_game.vm = array_new();
 	g_game.next_bot_id = 0;
 
-	load_bot("bots/dummy.lua");
 	load_bot("bots/roamer.lua");
 	load_bot("bots/spammer.lua");
+
+	for (int i = 0; i < 20; i++)
+		load_bot("bots/dummy.lua");
 }
 
 /**
@@ -56,10 +56,13 @@ void game_init(void)
  */
 void game_quit(void)
 {
-	size_t vm_count = array_size(g_game.vm);
-	for (size_t i = 0; i < vm_count; i++)
-		vm_free(array_get(g_game.vm, i));
-	array_free(g_game.vm);
+	Array tanks = world_get_tanks(g_game.world);
+	size_t tank_count = array_size(tanks);
+	for (size_t i = 0; i < tank_count; i++)
+	{
+		Tank tank = array_get(tanks, i);
+		vm_free(tank_get_vm(tank));
+	}
 	world_free(g_game.world);
 }
 

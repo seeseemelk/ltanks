@@ -10,4 +10,12 @@ typedef uint16_t u16;
 typedef uint8_t u8;
 typedef const char* String;
 
+/**
+ * Returns the absolute value of the difference of `a` and `b`.
+ */
+static inline unsigned int absdiff(unsigned int a, unsigned int b)
+{
+	return (a > b) ? (a - b) : (b - a);
+}
+
 #endif /* HEADER_UTILS */

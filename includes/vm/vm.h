@@ -1,7 +1,7 @@
 #ifndef VM_VM_H_
 #define VM_VM_H_
 
-#include "game/tank.h"
+#include "game/types.h"
 #include "cdefs.h"
 #include <stdbool.h>
 

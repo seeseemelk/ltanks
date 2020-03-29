@@ -9,7 +9,6 @@
 struct game_t
 {
 	World world;
-	Array vm;
 	unsigned int next_bot_id;
 };
 

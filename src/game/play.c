@@ -10,6 +10,13 @@
 
 static clock_t previous_time;
 
+static void remove_tank(Tank tank)
+{
+	VM vm = tank_get_vm(tank);
+	tank_free(tank);
+	vm_free(vm);
+}
+
 /**
  * Executed when the game is loaded.
  */
@@ -47,19 +54,14 @@ bool game_step(void)
 	previous_time = current_time;
 
 	// Run VM state
-	size_t vm_count = array_size(g_game.vm);
-	for (size_t i = 0; i < vm_count; i++)
-	{
-		vm_run(array_get(g_game.vm, i));
-	}
-
 	// Move and render all tanks
-	field_show();
 	Array tanks = world_get_tanks(g_game.world);
 	size_t tank_count = array_size(tanks);
+	field_show();
 	for (size_t i = 0; i < tank_count; i++)
 	{
 		Tank tank = array_get(tanks, i);
+		vm_run(tank_get_vm(tank));
 		tank_update(tank);
 		field_render_tank(tank);
 	}
@@ -72,10 +74,9 @@ bool game_step(void)
 		Missile missile = array_get(missiles, i);
 		if (missile_move(missile))
 		{
-			world_explode(g_game.world, missile_get_x(missile), missile_get_y(missile), 5000);
+			world_explode(g_game.world, missile_get_x(missile), missile_get_y(missile), 5000, remove_tank);
 			array_remove_element(missiles, missile);
-			i--;
-			missile_count--;
+			i--, missile_count--;
 			missile_free(missile);
 		}
 		else

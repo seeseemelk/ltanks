@@ -91,10 +91,26 @@ void world_add_missile(World world, Missile missile)
  * @param world The world.
  * @param x The X-coordinate of the explosion.
  * @param y The Y-coordinate of the explosion.
+ * @param radius The radius of the explosion.
+ * @param tank_destroyed Callback containing a tank that was destroyed.
  */
-void world_explode(World world, u16 x, u16 y, float radius)
+void world_explode(World world, u16 x, u16 y, float radius, void (*tank_destroyed)(Tank))
 {
-	UNUSED(world);
+	float radius_sqr = radius * radius;
+	size_t tank_count = array_size(world->tanks);
+	for (size_t i = 0; i < tank_count; i++)
+	{
+		Tank tank = array_get(world->tanks, i);
+		unsigned int dx = absdiff(x, tank_get_x(tank));
+		unsigned int dy = absdiff(y, tank_get_y(tank));
+		unsigned int distance =  dx*dx + dy*dy;
+		if (distance <= radius_sqr)
+		{
+			array_remove_element(world->tanks, tank);
+			i--, tank_count--;
+			tank_destroyed(tank);
+		}
+	}
 	field_render_explosion(x, y, radius);
 }
 

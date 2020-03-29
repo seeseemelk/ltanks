@@ -39,7 +39,7 @@ static unsigned char id_to_char(unsigned int id)
 	if (id < 10)
 		return '0' + id;
 	else
-		return 'A' + id;
+		return 'A' + (id - 10);
 }
 
 /**
@@ -63,15 +63,6 @@ static location_t calculate_location(long x, long y)
 	location.x = x / (UINT16_MAX / size) + offset_x;
 	location.y = y / (UINT16_MAX / size) + offset_y;
 	return location;
-}
-
-/**
- * Returns the absolute value of the difference of `a` and `b`.
- */
-static unsigned int absdiff(unsigned int a, unsigned int b)
-{
-	return b - a;
-	//return (a > b) ? (a - b) : (b - a);
 }
 
 /**
@@ -167,14 +158,4 @@ void field_render_explosion(u16 x, u16 y, float radius)
 				gfx_set_char(at_x, at_y, GFX_LIGHT);
 		}
 	}
-
-	/*gfx_set_char(location.x, location.y, GFX_HEAVY);
-	gfx_set_char(location.x, location.y-1, GFX_MEDIUM);
-	gfx_set_char(location.x, location.y+1, GFX_MEDIUM);
-	gfx_set_char(location.x-1, location.y-1, GFX_LIGHT);
-	gfx_set_char(location.x-1, location.y, GFX_MEDIUM);
-	gfx_set_char(location.x-1, location.y+1, GFX_LIGHT);
-	gfx_set_char(location.x+1, location.y-1, GFX_LIGHT);
-	gfx_set_char(location.x+1, location.y, GFX_MEDIUM);
-	gfx_set_char(location.x+1, location.y+1, GFX_LIGHT);*/
 }

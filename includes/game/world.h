@@ -11,6 +11,6 @@ Array world_get_tanks(World world);
 Array world_get_missiles(World world);
 void world_add_tank(World world, Tank tank);
 void world_add_missile(World world, Missile missile);
-void world_explode(World world, u16 x, u16 y, float radius);
+void world_explode(World world, u16 x, u16 y, float radius, void (*tank_destroyed)(Tank));
 
 #endif /* GAME_WORLD_H_ */
