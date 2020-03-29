@@ -8,29 +8,16 @@
 
 #include "game/world.h"
 #include "game/tank.h"
+#include "game/types.h"
+#include "views/field.h"
 #include "array.h"
-#include "range.h"
 #include <stdlib.h>
 
 struct world_t
 {
 	Array tanks;
+	Array missiles;
 };
-
-struct tank_iterator
-{
-	Array tanks;
-	size_t index;
-};
-typedef struct tank_iterator* TankIterator;
-
-static void* _world_next_tank(void* arg)
-{
-	TankIterator iterator = arg;
-	if (iterator->index >= array_size(iterator->tanks))
-		return NULL;
-	return array_get(iterator->tanks, iterator->index++);
-}
 
 /**
  * Creates a new world.
@@ -41,6 +28,7 @@ World world_new(void)
 {
 	World world = malloc(sizeof(struct world_t));
 	world->tanks = array_new();
+	world->missiles = array_new();
 	return world;
 }
 
@@ -50,21 +38,28 @@ World world_new(void)
 void world_free(World world)
 {
 	array_free(world->tanks);
+	array_free(world->missiles);
 	free(world);
 }
 
 /**
  * Gets all tanks on this world.
  *
- * @return A range describing all tanks on this world.
+ * @return An array containing all tanks on this world.
  */
-range_t world_get_tanks(World world)
+Array world_get_tanks(World world)
 {
-	TankIterator iterator = malloc(sizeof(TankIterator));
-	iterator->tanks = world->tanks;
-	iterator->index = 0;
-	range_t range = range_new(_world_next_tank, iterator);
-	return range;
+	return world->tanks;
+}
+
+/**
+ * Gets all missiles on this world.
+ *
+ * @return An array containing all missiles.
+ */
+Array world_get_missiles(World world)
+{
+	return world->missiles;
 }
 
 /**
@@ -75,5 +70,33 @@ range_t world_get_tanks(World world)
  */
 void world_add_tank(World world, Tank tank)
 {
+	tank_set_world(tank, world);
 	array_push(world->tanks, tank);
 }
+
+/**
+ * Adds a missile to the world.
+ *
+ * @param world The world to add it to.
+ * @param missile The missile to add.
+ */
+void world_add_missile(World world, Missile missile)
+{
+	array_push(world->missiles, missile);
+}
+
+/**
+ * Explodes a region of the world.
+ *
+ * @param world The world.
+ * @param x The X-coordinate of the explosion.
+ * @param y The Y-coordinate of the explosion.
+ */
+void world_explode(World world, u16 x, u16 y)
+{
+	UNUSED(world);
+	UNUSED(x);
+	UNUSED(y);
+	field_render_explosion(x, y);
+}
+

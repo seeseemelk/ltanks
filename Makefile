@@ -15,7 +15,7 @@ CFLAGS = -Wall -Wextra \
 	-Iincludes -Iincludes/lua \
 	-DLTANKS_TARGET=$(TARGET) -DLUA_32BITS \
 	-MMD -MF $(@:%.o=%.d) --std=c99 \
-	-Wall -Wextra -Werror \
+	-Wall -Wextra -Werror -ggdb \
 	$(shell pkg-config --cflags $(DEPS)) \
 	-c -o $@ $<
 LDFLAGS = -lm $(shell pkg-config --libs $(DEPS)) \

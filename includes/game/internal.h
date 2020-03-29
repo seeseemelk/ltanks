@@ -4,11 +4,13 @@
 #include "game/game.h"
 #include "game/world.h"
 #include "vm/vm.h"
+#include "array.h"
 
 struct game_t
 {
 	World world;
-	VM vm;
+	Array vm;
+	unsigned int next_bot_id;
 };
 
 extern struct game_t g_game;

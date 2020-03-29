@@ -34,7 +34,7 @@ struct array_t
 static void array_grow(Array array)
 {
 	if (array->capacity == 0)
-		array->capacity++;
+		array->capacity = 1;
 	else
 		array->capacity *= 2;
 	array->memory = realloc(array->memory, array->capacity * sizeof(struct entry_t));
@@ -95,7 +95,7 @@ size_t array_size(Array array)
  */
 void* array_get(Array array, size_t index)
 {
-	if (index >= array->capacity)
+	if (index >= array->size)
 	{
 		fprintf(stderr, "ERROR: Out-of-bounds array read. (index: %zu, size: %zu)\n", index, array->size);
 		abort();
@@ -116,7 +116,7 @@ void* array_get(Array array, size_t index)
  */
 void array_set(Array array, size_t index, void* element)
 {
-	if (index >= array->capacity)
+	if (index >= array->size)
 	{
 		fprintf(stderr, "ERROR: Out-of-bounds array write. (index: %zu, size: %zu)\n", index, array->size);
 		abort();
@@ -134,6 +134,30 @@ void array_push(Array array, void* element)
 {
 	if (array->size >= array->capacity)
 		array_grow(array);
-	array_set(array, array->size, element);
 	array->size++;
+	array_set(array, array->size - 1, element);
+}
+
+/**
+ * Removes an element from an array, shifting all later
+ * elements.
+ *
+ * @param array The array containing the element.
+ * @param element The element to remove.
+ */
+void array_remove_element(Array array, void* element)
+{
+	size_t size = array->size;
+	struct entry_t* memory = array->memory;
+
+	size_t i = 0;
+	for (; i < size; i++)
+	{
+		if (memory[i].entry == element)
+			break;
+	}
+	i++;
+	for (; i < size; i++)
+		memory[i-1].entry = memory[i].entry;
+	array->size--;
 }

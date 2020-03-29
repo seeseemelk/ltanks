@@ -10,7 +10,13 @@ enum keycode_t
 };
 typedef enum keycode_t keycode_t;
 
-#define GFX_VERTICAL 0x7Fu
+#define GFX_CIRCLE 7
+#define GFX_VERTICAL 186
+#define GFX_HORIZONTAL 205
+#define GFX_TOPRIGHT 187
+#define GFX_BOTTOMRIGHT 188
+#define GFX_TOPLEFT 201
+#define GFX_BOTTOMLEFT 200
 
 typedef struct
 {

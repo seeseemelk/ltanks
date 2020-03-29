@@ -6,7 +6,8 @@
 #include <time.h>
 #include <stdio.h>
 
-#define CLOCK_TO_MS(x) (x / (CLK_TCK / 1000UL))
+#define CLOCK_TO_MS(x) (x / (CLOCKS_PER_SEC / 1000UL))
+
 static clock_t previous_time;
 
 /**
@@ -41,23 +42,44 @@ bool game_step(void)
 	// Check if an update is needed
 	clock_t current_time = clock();
 	clock_t difference = current_time - previous_time;
-	//printf("Difference: %ld\n", CLOCK_TO_MS(difference));
 	if (CLOCK_TO_MS(difference) <= 100)
 		return false;
 	previous_time = current_time;
 
 	// Run VM state
-	vm_run(g_game.vm);
+	size_t vm_count = array_size(g_game.vm);
+	for (size_t i = 0; i < vm_count; i++)
+	{
+		vm_run(array_get(g_game.vm, i));
+	}
 
 	// Move and render all tanks
-	range_t iterator = world_get_tanks(g_game.world);
-	Tank tank;
-
 	field_show();
-	while ((tank = range_next(&iterator)) != NULL)
+	Array tanks = world_get_tanks(g_game.world);
+	size_t tank_count = array_size(tanks);
+	for (size_t i = 0; i < tank_count; i++)
 	{
-		tank_move(tank, 1.0f);
-		field_show_tank(tank);
+		Tank tank = array_get(tanks, i);
+		tank_update(tank);
+		field_render_tank(tank);
+	}
+
+	// Move and render all missiles
+	Array missiles = world_get_missiles(g_game.world);
+	size_t missile_count = array_size(missiles);
+	for (size_t i = 0; i < missile_count; i++)
+	{
+		Missile missile = array_get(missiles, i);
+		if (missile_move(missile))
+		{
+			world_explode(g_game.world, missile_get_x(missile), missile_get_y(missile));
+			array_remove_element(missiles, missile);
+			i--;
+			missile_count--;
+			missile_free(missile);
+		}
+		else
+			field_render_missile(missile);
 	}
 
 	return true;

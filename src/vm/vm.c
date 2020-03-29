@@ -23,12 +23,38 @@ static void vm_free_state(VM vm)
 }
 
 /**
+ * Initialises the Lua state.
+ */
+static void vm_init_state(VM vm)
+{
+	vm_free_state(vm);
+	vm->luavm = luaL_newstate();
+	luaL_openlibs(vm->luavm);
+	vm_registerlib(vm, vm->luavm);
+}
+
+/**
  * Initialises the VM.
  */
 VM vm_new(void)
 {
 	VM vm = malloc(sizeof(struct vm_t));
 	vm->luavm = NULL;
+	return vm;
+}
+
+/**
+ * Loads a new VM from a file.
+ *
+ * @param path Path to the file.
+ */
+VM vm_new_from_file(const char* path)
+{
+	VM vm = vm_new();
+	vm_init_state(vm);
+	if (luaL_loadfile(vm->luavm, path) != LUA_OK)
+		abort();
+	lua_call(vm->luavm, 0, 0);
 	return vm;
 }
 
@@ -46,9 +72,7 @@ void vm_free(VM vm)
  */
 bool vm_set_program(VM vm, String program)
 {
-	vm_free_state(vm);
-	vm->luavm = luaL_newstate();
-	vm_registerlib(vm, vm->luavm);
+	vm_init_state(vm);
 	return luaL_dostring(vm->luavm, program);
 }
 

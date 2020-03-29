@@ -13,7 +13,6 @@ static void _handle_special(char key)
 	switch (key)
 	{
 	default:
-		//gfx_print(0, 0, "???");
 		break;
 	}
 }
