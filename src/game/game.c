@@ -47,7 +47,7 @@ void game_init(void)
 	load_bot("bots/roamer.lua");
 	load_bot("bots/spammer.lua");
 
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 5; i++)
 		load_bot("bots/dummy.lua");
 }
 
