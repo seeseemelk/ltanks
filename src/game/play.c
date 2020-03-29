@@ -72,7 +72,7 @@ bool game_step(void)
 		Missile missile = array_get(missiles, i);
 		if (missile_move(missile))
 		{
-			world_explode(g_game.world, missile_get_x(missile), missile_get_y(missile));
+			world_explode(g_game.world, missile_get_x(missile), missile_get_y(missile), 5000);
 			array_remove_element(missiles, missile);
 			i--;
 			missile_count--;

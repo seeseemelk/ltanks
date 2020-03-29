@@ -31,6 +31,9 @@ void gfx_init_text(void)
  */
 void gfx_set_char(unsigned int x, unsigned int y, unsigned char c)
 {
+	if (x >= gfx_width() || y >= gfx_height())
+		return;
+
 	SDL_Rect source =
 	{
 		.x = 9 * (c % 32),

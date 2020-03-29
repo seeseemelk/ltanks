@@ -70,6 +70,8 @@ void gfx_quit(void)
 
 void gfx_set_char(unsigned int x, unsigned int y, unsigned char c)
 {
+	if (x >= gfx_width() || y >= gfx_height())
+		return;
 	unsigned char str[2];
 	str[0] = c;
 	str[1] = 0;

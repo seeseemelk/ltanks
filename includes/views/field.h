@@ -7,6 +7,6 @@
 void field_show(void);
 void field_render_tank(Tank tank);
 void field_render_missile(Missile missile);
-void field_render_explosion(u16 x, u16 y);
+void field_render_explosion(u16 x, u16 y, float radius);
 
 #endif /* VIEWS_FIELD_H_ */

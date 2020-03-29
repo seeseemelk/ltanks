@@ -10,6 +10,10 @@ enum keycode_t
 };
 typedef enum keycode_t keycode_t;
 
+#define GFX_LIGHT 176
+#define GFX_MEDIUM 177
+#define GFX_HEAVY 178
+
 #define GFX_CIRCLE 7
 #define GFX_VERTICAL 186
 #define GFX_HORIZONTAL 205

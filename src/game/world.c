@@ -92,11 +92,9 @@ void world_add_missile(World world, Missile missile)
  * @param x The X-coordinate of the explosion.
  * @param y The Y-coordinate of the explosion.
  */
-void world_explode(World world, u16 x, u16 y)
+void world_explode(World world, u16 x, u16 y, float radius)
 {
 	UNUSED(world);
-	UNUSED(x);
-	UNUSED(y);
-	field_render_explosion(x, y);
+	field_render_explosion(x, y, radius);
 }
 

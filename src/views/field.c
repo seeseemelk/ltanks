@@ -1,6 +1,7 @@
 #include "views/field.h"
 #include "gfx/gfx.h"
 #include "game/tank.h"
+#include <stdio.h>
 
 /*typedef struct
 {
@@ -8,9 +9,18 @@
 	unsigned int height;
 } fieldsize_t;*/
 
+typedef struct
+{
+	unsigned int x;
+	unsigned int y;
+} location_t;
+
 static unsigned int offset_x = 1;
 static unsigned int offset_y = 1;
 
+/**
+ * Gets the size of the field.
+ */
 static unsigned int field_size()
 {
 	unsigned int width = gfx_width() - 2 - offset_x;
@@ -21,6 +31,9 @@ static unsigned int field_size()
 		return width;
 }
 
+/**
+ * Converts the ID of a tank to a character.
+ */
 static unsigned char id_to_char(unsigned int id)
 {
 	if (id < 10)
@@ -29,6 +42,41 @@ static unsigned char id_to_char(unsigned int id)
 		return 'A' + id;
 }
 
+/**
+ * Converts a board location to an onscreen location.
+ */
+static location_t calculate_location(long x, long y)
+{
+	unsigned int size = field_size();
+	location_t location;
+
+	if (x > UINT16_MAX)
+		x = UINT16_MAX;
+	else if (x < 0)
+		x = 0;
+
+	if (y > UINT16_MAX)
+		y = UINT16_MAX;
+	else if (y < 0)
+		y = 0;
+
+	location.x = x / (UINT16_MAX / size) + offset_x;
+	location.y = y / (UINT16_MAX / size) + offset_y;
+	return location;
+}
+
+/**
+ * Returns the absolute value of the difference of `a` and `b`.
+ */
+static unsigned int absdiff(unsigned int a, unsigned int b)
+{
+	return b - a;
+	//return (a > b) ? (a - b) : (b - a);
+}
+
+/**
+ * Shows the basic field.
+ */
 void field_show(void)
 {
 	gfx_clear();
@@ -49,6 +97,9 @@ void field_show(void)
 	}
 }
 
+/**
+ * Renders a tank.
+ */
 void field_render_tank(Tank tank)
 {
 	const unsigned int size = field_size() - 1;
@@ -76,6 +127,9 @@ void field_render_tank(Tank tank)
 		gfx_set_char(at_x + 1, at_y - 1, '/');
 }
 
+/**
+ * Renders a missile.
+ */
 void field_render_missile(Missile missile)
 {
 	const unsigned int size = field_size() - 1;
@@ -84,11 +138,43 @@ void field_render_missile(Missile missile)
 	gfx_set_char(at_x, at_y, GFX_CIRCLE);
 }
 
-
-void field_render_explosion(u16 x, u16 y)
+/**
+ * Renders an explosion.
+ */
+void field_render_explosion(u16 x, u16 y, float radius)
 {
-	const unsigned int size = field_size() - 1;
-	const unsigned int at_x = x / (UINT16_MAX / size) + offset_x;
-	const unsigned int at_y = y / (UINT16_MAX / size) + offset_y;
-	gfx_set_char(at_x, at_y, 2);
+	location_t center = calculate_location(x, y);
+	location_t start = calculate_location(x - radius, y - radius);
+	location_t end = calculate_location(x + radius, y + radius);
+
+	float screen_radius = radius / (UINT16_MAX / field_size());
+	float radius_sqr = screen_radius * screen_radius;
+	float radius_inner_sqr = radius_sqr / 3.0f;
+	float radius_middle_sqr = radius_sqr / 2.0f;
+
+	for (unsigned int at_y = start.y; at_y <= end.y; at_y++)
+	{
+		for (unsigned int at_x = start.x; at_x <= end.x; at_x++)
+		{
+			unsigned int dx = absdiff(at_x, center.x);
+			unsigned int dy = absdiff(at_y, center.y);
+			float distance = dx*dx + dy*dy;
+			if (distance <= radius_inner_sqr)
+				gfx_set_char(at_x, at_y, GFX_HEAVY);
+			else if (distance <= radius_middle_sqr)
+				gfx_set_char(at_x, at_y, GFX_MEDIUM);
+			else if (distance <= radius_sqr)
+				gfx_set_char(at_x, at_y, GFX_LIGHT);
+		}
+	}
+
+	/*gfx_set_char(location.x, location.y, GFX_HEAVY);
+	gfx_set_char(location.x, location.y-1, GFX_MEDIUM);
+	gfx_set_char(location.x, location.y+1, GFX_MEDIUM);
+	gfx_set_char(location.x-1, location.y-1, GFX_LIGHT);
+	gfx_set_char(location.x-1, location.y, GFX_MEDIUM);
+	gfx_set_char(location.x-1, location.y+1, GFX_LIGHT);
+	gfx_set_char(location.x+1, location.y-1, GFX_LIGHT);
+	gfx_set_char(location.x+1, location.y, GFX_MEDIUM);
+	gfx_set_char(location.x+1, location.y+1, GFX_LIGHT);*/
 }
